@@ -25,23 +25,24 @@ class Graph:
         self.center_x_axis = (self.width//2)
         self.center_y_axis = (self.height//2)
 
-        self.origin = self.center_x_axis, self.center_y_axis
-
-        # default lines
+        # default origin lines
         self.def_lines = {
             # x axis
-            "x": ((0, self.center_y_axis), (self.width, self.center_y_axis)),
+            "x": [[0, self.center_y_axis], [self.width, self.center_y_axis]],
             # y axis
-            "y": ((self.center_x_axis, 0), (self.center_x_axis, self.height)),
+            "y": [[self.center_x_axis, 0], [self.center_x_axis, self.height]],
         }
-        self.show_grid()
 
-    def show_grid(self):
+        # default origin
+        self.origin = self.set_origin([self.center_x_axis, self.center_y_axis])
+
+    def show_grid_numbers(self):
         """generate numbers"""
 
         font = pygame.font.Font(None, size=15)
 
         # x axis
+        if self.origin[0]:
         for num in range(-7, 8):
             t = font.render(f"{num}", True, (0, 0, 0))
             x_pos = self.grid_pos((num, 0))
@@ -58,6 +59,24 @@ class Graph:
             t = font.render(f"{-num}", True, (0, 0, 0))
             plus_y_pos = self.grid_pos((0, num))
             self.world.blit(t, plus_y_pos)
+
+    def set_origin(self, pos):
+        """set a new origin from the middle of the screen"""
+        # self.def_lines['x'][0] # point 1 of x axis def line
+        # self.def_lines['x'][1] # point 2 of x axis def line
+
+        # take the y values of both
+        self.def_lines['y'][0][0] = pos[0]
+        self.def_lines['y'][1][0] = pos[0]
+
+        self.def_lines['x'][0][1] = pos[1]
+        self.def_lines['x'][1][1] = pos[1]
+
+        self.origin = pos
+
+        return self.origin
+
+    # to-pygame interpreters
 
     def grid_pos(self, pos):
         """place a position `pos` relative to
@@ -94,6 +113,7 @@ class World:
 
         self.graph = Graph(self.screen)
 
+        self.grid = True
         # set initial postion & scale
         box_pos = self.graph.grid_pos([0, 0])
         self.box = point(box_pos)
@@ -111,20 +131,29 @@ class World:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
-                        by_y -= 1
+                        by_y -= .5
                     if event.key == pygame.K_DOWN:
-                        by_y += 1
+                        by_y += .5
                     if event.key == pygame.K_RIGHT:
-                        by_x += 1
+                        by_x += .5
                     if event.key == pygame.K_LEFT:
-                        by_x -= 1
+                        by_x -= .5
+                    if event.key == pygame.K_g:
+                        self.grid = not self.grid
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        m_pos = pygame.mouse.get_pos()
+                        self.graph.set_origin(m_pos)
 
             self.box.pos = self.graph.grid_pos([by_x, by_y])
             # self.box.graph_update()
 
             self.graph.draw()
             self.box.draw(self.screen)
-            self.graph.show_grid()
+
+            if self.grid:
+                self.graph.show_grid_numbers()
 
             dt = self.clock.tick(60) / 1000  # Delta time in seconds
             pygame.display.flip()
