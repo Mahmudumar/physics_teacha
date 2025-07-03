@@ -42,7 +42,8 @@ class Graph:
         font = pygame.font.Font(None, size=15)
 
         # x axis
-        # TODO: make the number generate based on the origin
+        # TODO: make the number generate based on the origin position
+        # lot's of translations are needed back and forth
         for num in range(-7, 8):
             t = font.render(f"{num}", True, (0, 0, 0))
             x_pos = self.grid_pos((num, 0))
@@ -76,8 +77,12 @@ class Graph:
 
         return self.origin
 
-    # to-pygame interpreters
+    # pygame-to-graph interpreter
+    def from_pygame(self, num):
+        self.origin[0]
 
+
+    # to-pygame interpreters
     def grid_pos(self, pos):
         """place a position `pos` relative to
          your custom origin and 
