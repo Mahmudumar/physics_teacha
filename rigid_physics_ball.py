@@ -13,7 +13,7 @@ class RigidBody:
         self.vel = pygame.Vector2(0, 0)
         self.size = size
         self.mass = mass
-        self.gravity = pygame.Vector2(0, 500)  # pixels per second^2
+        self.gravity = pygame.Vector2(0, 500)  
 
     def update(self, dt, domain_size=(300, 300)):
         # Apply gravity
