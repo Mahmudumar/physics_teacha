@@ -144,6 +144,7 @@ class World:
         others.remove(box)
 
         for par in others:
+            pass
             
 
 
