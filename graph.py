@@ -42,7 +42,7 @@ class Graph:
         font = pygame.font.Font(None, size=15)
 
         # x axis
-        if self.origin[0]:
+        # TODO: make the number generate based on the origin
         for num in range(-7, 8):
             t = font.render(f"{num}", True, (0, 0, 0))
             x_pos = self.grid_pos((num, 0))
